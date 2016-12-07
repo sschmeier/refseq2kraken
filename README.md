@@ -45,8 +45,7 @@ optional arguments:
   -l LEVEL, --level LEVEL
                         Assembly - level of genomic sequences to include,
                         separated by comma. For example: Chromosome, Contig,
-                        Scaffold. [default="Complete
-                        Genome,Chromosome,Contig,Scaffold"]
+                        Scaffold. [default="Complete Genome"]
   -a, --assembly        Print assembly stats for branches and exits.
 
 Threading:
@@ -126,8 +125,7 @@ optional arguments:
   -l LEVEL, --level LEVEL
                         Assembly - level of genomic sequences to include,
                         separated by comma. For example: Chromosome, Contig,
-                        Scaffold. [default="Complete
-                        Genome,Chromosome,Contig,Scaffold"]
+                        Scaffold. [default="Complete Genome"]
   -d DIRECTORY, --dir DIRECTORY
                         Base directory for refseq fasta-files. Here, we assume
                         sub-directories for branches, e.g. bacteria etc.
@@ -160,14 +158,14 @@ python getRefseqGenomic.py -b fungi -p 8
 python getRefseqGenomic.py -b archaea -p 8
 python getRefseqGenomic.py -b viral -p 8
 python getRefseqGenomic.py -b protozoa -p 8
-python getRefseqGenomic.py -b bacteria -l "Complete Genome" -p 8
+python getRefseqGenomic.py -b bacteria -p 8
 
 # convert to kraken format
 python getKrakenFna.py -b fungi -p 8 kraken_201612
 python getKrakenFna.py -b viral -p 8 kraken_201612
 python getKrakenFna.py -b archaea -p 8 kraken_201612
 python getKrakenFna.py -b protozoa -p 8 kraken_201612
-python getKrakenFna.py -b bacteria -p 8 -l "Complete Genome" kraken_201612
+python getKrakenFna.py -b bacteria -p 8 kraken_201612
 
 # install kraken if you must
 conda create -n kraken kraken-all
