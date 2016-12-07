@@ -23,6 +23,12 @@ I improved in two ways:
 This script will retrieve genomic data from refseq via rsync. It saves on downloads as only
 files that updated or are new will be downloaded in sub-sequent runs.
 
+Warning! Using this script will make one rsync call to the ftp-server from ncbi per file you 
+want to download. In case of bacteria and all assembly levels, this will result in ~70000 ftp-server 
+accesses. There might be a limit on what ncbi allows in terms of connections to their ftp-server. 
+If you overdo it, ncbi might take action against you. Use ths script at your own risk.
+
+
 ```bash
 usage: getRefseqGenomic.py [-h] [--version] [-b BRANCH] [-l LEVEL] [-a]
                            [-p INT]
