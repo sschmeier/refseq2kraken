@@ -10,6 +10,14 @@ I improved in two ways:
 1. I split the tasks of  data download and kraken data preparation.
 2. Both separate tasks allow multithreading to be used.
 
+## Requirements
+
+1. Python2
+2. BioPython
+3. Linux shell with rsync and Git
+4. ~10GB of space for compressed ncbi refseq fasta-files
+5. ~40GB of space for processed uncompressed kraken-readable fasta-files
+
 ## Download refseq genomic fasta-data via rsync (getRefseqGenomic.py)
 
 This script will retrieve genomic data from refseq via rsync. It saves on downloads as only
