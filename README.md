@@ -10,8 +10,7 @@ I improved in two ways:
 1. I split the tasks of  data download and kraken data preparation.
 2. Both separate tasks allow multithreading to be used.
 
-
-##Download refseq genomic fasta-data via rsync (getRefseqGenomic.py)
+## Download refseq genomic fasta-data via rsync (getRefseqGenomic.py)
 
 This script will retrieve genomic data from refseq via rsync. It saves on downloads as only
 files that updated or are new will be downloaded in sub-sequent runs.
@@ -80,8 +79,8 @@ Scaffold        45
 Should you at a later stage re-run the command, `rsync` makes sure to only
 download changed files (**Attention:** in terms of filesize, not content).
 
+## Convert fasta-headers to work with Kraken (getKrakenFna.py)
 
-##Convert fasta-headers to work with Kraken (getKrakenFna.py)
 This script will take fasta-files and create a new "uncompressed" (as Kraken
 needs uncompressed files) fasta-files with each header changed to a form:
 `>seq1|kraken:taxid|12345 blah`. This allows to use the new ncbi files (without
