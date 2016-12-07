@@ -1,4 +1,4 @@
-# Download refseq-genomic data and prepare it for Kraken
+# Download refseq-genomic data and prepare it for [Kraken](https://ccb.jhu.edu/software/kraken/)
 
 Similar approach as in:
 [http://www.opiniomics.org/building-a-kraken-database-with-new-ftp-structure-and-no-gi-numbers/](http://www.opiniomics.org/building-a-kraken-database-with-new-ftp-structure-and-no-gi-numbers/)
@@ -11,7 +11,7 @@ I improved in two ways:
 2. Both separate tasks allow multithreading to be used.
 
 
-##1. Download refseq genomic fasta-data via rsync (getRefseqGenomic.py)
+##Download refseq genomic fasta-data via rsync (getRefseqGenomic.py)
 
 This script will retrieve genomic data from refseq via rsync. It saves on downloads as only
 files that updated or are new will be downloaded in sub-sequent runs.
@@ -58,7 +58,7 @@ python getRefseqGenomic.py -b archaea -p 8
 This would download "Complete Genome, Chromosome, Contig, Scaffold" genomic sequences
 for "bacteria, viral, fungi, protozoa, archaea". However, this might not be what
 you necessarily want, e.g. for bacteria the download becomes huge. Instead one
-can use the following to only download "Compel Genome" for bacteria:
+can use the following to only download "Complete Genome" for bacteria:
 
 ```bash
 python getRefseqGenomic.py -b bacteria -t "Complete Genome" -p 8
@@ -78,10 +78,10 @@ Scaffold        45
 ```
 
 Should you at a later stage re-run the command, `rsync` makes sure to only
-download changed files (in terms of filesize).
+download changed files (**Attention:** in terms of filesize, not content).
 
 
-##2. Convert fasta-headers to work with Kraken (getKrakenFna.py)
+##Convert fasta-headers to work with Kraken (getKrakenFna.py)
 This script will take fasta-files and create a new "uncompressed" (as Kraken
 needs uncompressed files) fasta-files with each header changed to a form:
 `>seq1|kraken:taxid|12345 blah`. This allows to use the new ncbi files (without
