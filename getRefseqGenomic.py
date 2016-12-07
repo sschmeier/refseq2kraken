@@ -185,7 +185,7 @@ def main():
     #-------------------------------------------------------------------------
     # MULTITHREADING
     #-------------------------------------------------------------------------
-    start_time = timer()  # very crude
+    start_time = timer()  # very crude timing
     # create pool of workers ---------------------
     pool = Pool(processes = process_number)
     result_list = pool.map_async(my_func, job_list, chunksize=1)  # chunksize=1 for correct progressbar
