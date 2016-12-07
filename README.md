@@ -95,8 +95,8 @@ download changed files (**Attention:** in terms of filesize, not content).
 
 ## Convert fasta-headers to work with Kraken (getKrakenFna.py)
 
-This script will take fasta-files and create a new "compressed" (Kraken
-needs uncompressed files though, thus uncompression before adding them to kraken DB is necessary) fasta-files with each header changed to a form:
+This script will take fasta-files and create new "uncompressed" (Kraken
+needs uncompressed files) fasta-files with each header changed to a form:
 `>seq1|kraken:taxid|12345 blah`. This allows to use the new ncbi files (without
 GI identifiers) with `Kraken`. Requieres the third-party `BioPython` lib.
 
@@ -169,7 +169,6 @@ kraken-build --download-taxonomy --db kraken-db-bvapf_201612
 
 # for each branch, add all fna in the directory to the database
 for dir in bacteria viral archaea protozoa fungi; do
-        gzip -d kraken_201612/$dir/*fna.gz;
         for fna in `ls kraken_201612/$dir/*.fna`; do
                 kraken-build --add-to-library $fna --db kraken-db-bvapf_201612;
         done;

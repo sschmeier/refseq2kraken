@@ -209,8 +209,8 @@ def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dirpath='./geno
                 filepath = os.path.join(basedir, name)
                 taxid    = a[5]
 
-                #fnameTax = name.replace('.fna.gz', '.tax.fna')
-                fnameTax = name.replace('.fna.gz', '.tax.fna.gz')  # store gziped files
+                fnameTax = name.replace('.fna.gz', '.tax.fna')
+                #fnameTax = name.replace('.fna.gz', '.tax.fna.gz')  # store gziped files
                 jobs.append((taxid, filepath, os.path.join(krakendir, fnameTax)))
         
     return jobs, d
