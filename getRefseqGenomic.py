@@ -63,7 +63,7 @@ def parse_cmdline():
         metavar='BRANCH',
         type=str,
         default="bacteria,viral,fungi,protozoa,archaea",
-        help='Branches of organisms to download separated by comma, e.g. bacteria, fungi, etc. [default=" bacteria,viral,fungi,protozoa,archaea"]')
+        help='Branches of organisms to download separated by comma, e.g. bacteria,fungi, etc. [default=" bacteria,viral,fungi,protozoa,archaea"]')
     
     parser.add_argument('-l',
         '--level',
@@ -71,7 +71,7 @@ def parse_cmdline():
         metavar='LEVEL',
         type=str,
         default="Complete Genome",
-        help='Assembly - level of genomic sequences to include, separated by comma. For example: Chromosome, Contig, Scaffold. [default="Complete Genome"]')
+        help='Assembly - level of genomic sequences to include, separated by comma. For example: Chromosome,Contig,Scaffold. [default="Complete Genome"]')
 
     parser.add_argument('-a',
         '--assembly',

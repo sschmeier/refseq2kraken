@@ -78,7 +78,7 @@ def parse_cmdline():
         metavar='LEVEL',
         type=str,
         default="Complete Genome",
-        help='Assembly - level of genomic sequences to include, separated by comma. For example: Chromosome, Contig, Scaffold. [default="Complete Genome"]')
+        help='Assembly - level of genomic sequences to include, separated by comma. For example: Chromosome,Contig,Scaffold. [default="Complete Genome"]')
     parser.add_argument('-d',
         '--dir',
         dest='str_dir',

@@ -154,18 +154,10 @@ python getKrakenFna.py -b archaea -p 8 kraken_201612
 
 ```bash
 # Download refseq
-python getRefseqGenomic.py -b fungi -p 8
-python getRefseqGenomic.py -b archaea -p 8
-python getRefseqGenomic.py -b viral -p 8
-python getRefseqGenomic.py -b protozoa -p 8
-python getRefseqGenomic.py -b bacteria -p 8
+python getRefseqGenomic.py -b -p 8
 
 # convert to kraken format
-python getKrakenFna.py -b fungi -p 8 kraken_201612
-python getKrakenFna.py -b viral -p 8 kraken_201612
-python getKrakenFna.py -b archaea -p 8 kraken_201612
-python getKrakenFna.py -b protozoa -p 8 kraken_201612
-python getKrakenFna.py -b bacteria -p 8 kraken_201612
+python getKrakenFna.py -p 8 kraken_201612
 
 # install kraken if you must
 conda create -n kraken kraken-all
