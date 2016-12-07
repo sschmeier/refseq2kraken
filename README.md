@@ -85,7 +85,7 @@ download changed files (in terms of filesize).
 This script will take fasta-files and create a new "uncompressed" (as Kraken
 needs uncompressed files) fasta-files with each header changed to a form:
 `>seq1|kraken:taxid|12345 blah`. This allows to use the new ncbi files (without
-GI identifiers) with `Kraken`.
+GI identifiers) with `Kraken`. Requieres the third-party `BioPython` lib.
 
 
 ```bash
@@ -152,6 +152,10 @@ python getKrakenFna.py -b viral -p 8 kraken_201612
 python getKrakenFna.py -b archaea -p 8 kraken_201612
 python getKrakenFna.py -b protozoa -p 8 kraken_201612
 python getKrakenFna.py -b bacteria -p 8 -t "Complete Genome" kraken_201612
+
+# install kraken if you must
+conda create -n kraken kraken-all
+source activate kraken
 
 # build a new database 
 # download taxonomy
