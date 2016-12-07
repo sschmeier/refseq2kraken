@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 """
-NAME: getKrakenFasta.py
+NAME: getKrakenFna.py
 =========
 
 DESCRIPTION
@@ -43,22 +43,6 @@ __version__ = '0.0.1'
 __date__ = '2016/12/06'
 __email__ = 's.schmeier@gmail.com'
 __author__ = 'Sebastian Schmeier'
-
-
-class cd:
-    """
-    Context manager for changing the current working directory
-    and changing back to previous path when context is exited.
-    """
-    def __init__(self, newPath):
-        self.newPath = os.path.expanduser(newPath)
-
-    def __enter__(self):
-        self.savedPath = os.getcwd()
-        os.chdir(self.newPath)
-
-    def __exit__(self, etype, value, traceback):
-        os.chdir(self.savedPath)
 
 
 def parse_cmdline():
@@ -108,7 +92,7 @@ def parse_cmdline():
         dest='assemblystats',
         default=False,
         action='store_true',
-        help='Print assembly stats for branches and exit.')
+        help='Print assembly stats for branches and exits.')
 
     group1 = parser.add_argument_group('Threading',
                                        'Multithreading arguments:')
@@ -121,10 +105,9 @@ def parse_cmdline():
         dest='process_number',
         default=1,
         help=
-        'Number of sub-processes (concurrent downloads) to use.'+\
+        'Number of concurrent sub-processes to use.'+\
         ' It is only logical to not give more processes'+\
         ' than cpus/cores are available. [default: 1]')
-
 
     # if no arguments supplied print help
     if len(sys.argv)==1:
@@ -175,9 +158,12 @@ def my_func(args):
     taxid = args[0]
     infilepath = args[1]
     outfilename = args[2]
-
-    outfile = new_file(outfilename)
-    fasta_records = SeqIO.parse(load_file(infilepath), "fasta")
+    if not os.path.isfile(infilepath):
+        sys.stderr.write('%s not found. SKIP\n'%(infilepath))
+        return (args, 0)
+    else:
+        fasta_records = SeqIO.parse(load_file(infilepath), "fasta")
+        outfile = new_file(outfilename)
     
     # here we iteracte over all records and change the header appropriately
     # >seq1|kraken:taxid|12345 original stuff
@@ -186,8 +172,7 @@ def my_func(args):
         SeqIO.write(record, outfile, "fasta")
         
     outfile.close()
-    code = 1
-    return (args, code)
+    return (args, 1)
 
 
 def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dirpath='./genomes/refseq/', krakendir='./kraken'):
@@ -253,17 +238,9 @@ def main():
                 sys.stdout.write('Make directory for kraken-files: %s\n'%(os.path.join(args.str_kraken, branch)))
                 os.makedirs(os.path.join(args.str_kraken, branch))
 
+    # exit if only stats should be displayed
     if args.assemblystats:
-        sys.exit(0)
-  
-    ## Non-parallelised version
-    ## num_jobs=len(job_list)
-    ## i = 0
-    ## for job in job_list:
-    ##     i+=1
-    ##     res = my_func(job)
-    ##     sys.stdout.write('%i/%i: %s,%i\n'%(i, num_jobs, res[0][1], res[1]))
-    ##     sys.stdout.flush()
+        return
 
     #-------------------------------------------------------------------------
     # MULTITHREADING
@@ -275,9 +252,9 @@ def main():
 
     # "chunksize"" usually only makes a noticable performance
     # difference for very large iterables
-    # Here I set it to one to get the progress bar working nicly
-    # Otherwise it will not give me the correct number of processes left
-    # but chunksize number.
+    # Here I set it to 1 to get the progress bar working nicly
+    # Otherwise it will not give the correct number of processes left
+    # to process but rather the chunksize number.
     chunksize = 1
     result_list = pool.map_async(my_func, job_list, chunksize=chunksize)
     pool.close()  # No more work
@@ -306,11 +283,11 @@ def main():
     sys.stderr.write("JOBS (%s): [%s] (%i) 100%%\n" % ('0'.rjust(len(str(jobs_total))),
                                                        bar_str,
                                                        jobs_total))
-    result_list = result_list.get()
+    #result_list = result_list.get()
     # --------------------------------------------
 
     end_time = timer()
-    sys.stderr.write('\nPROCESS-TIME: %.1f sec' % (end_time - start_time))
+    sys.stderr.write('PROCESS-TIME: %.1f sec\nDONE.\n\n' % (end_time - start_time))
 
     
     return

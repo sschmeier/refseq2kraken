@@ -73,6 +73,13 @@ def parse_cmdline():
         default="Complete Genome,Chromosome,Contig,Scaffold",
         help='Type of genomic sequences to include, separated by comma. For example: Chromosome, Contig, Scaffold. [default="Complete Genome,Chromosome,Contig,Scaffold"]')
 
+    parser.add_argument('-a',
+        '--assembly',
+        dest='assemblystats',
+        default=False,
+        action='store_true',
+        help='Print assembly stats for branches and exits.')
+
     group1 = parser.add_argument_group('Threading',
                                        'Multithreading arguments:')
 
@@ -138,18 +145,24 @@ def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dest_dir='genom
     jobs = []
     # read file, extract ftp paths and download each file
     oR = csv.reader(load_file(fname), delimiter = '\t')
+    d = {}
     for a in oR:
         try:
             version_status =  a[11]
         except:
             continue
+
+        if version_status == 'assembly_level':
+            continue
+        d[version_status] = d.get(version_status, 0) + 1
+
         if version_status in genomictypes:
             ftp_path = a[19]
             name     = os.path.basename(ftp_path) + '_genomic.fna.gz'
             dnlurl   = os.path.join(ftp_path, name)
             dnlurl = dnlurl.replace('ftp://', 'rsync://')
             jobs.append((name, dnlurl, 'genomes/refseq/%s' % branch, branch))
-    return jobs, retcode
+    return jobs, retcode, d
 
 
 def main():
@@ -165,22 +178,18 @@ def main():
 
     job_list = []
     for branch in branches:
-        job_list_branch, retcode = parse_assemblyfile(branch, types, 'genomes')
+        job_list_branch, retcode, dStats = parse_assemblyfile(branch, types, 'genomes')
         job_list += job_list_branch
+        if args.assemblystats:
+            status = dStats.keys()
+            status.sort()
+            sys.stdout.write('Branch: %s\n'%branch)
+            for s in status:
+                sys.stdout.write('%s\t%i\n' %(s,dStats[s]))
 
-    # Small number jobs for testing
-    #job_list = job_list[0:4]
-    #print job_list
-    #sys.exit()
-
-    ## Non-parallelised version
-    ## num_jobs=len(job_list)
-    ## i = 0
-    ## for job in job_list:
-    ##     i+=1
-    ##     res = my_func(job)
-    ##     sys.stdout.write('%i/%i %s: %s,%i\n'%(i, num_jobs, res[0][3], res[0][0], res[1]))
-    ##     sys.stdout.flush()
+    # exit if only stats should be displayed
+    if args.assemblystats:
+        return
         
     #-------------------------------------------------------------------------
     # MULTITHREADING
@@ -212,7 +221,7 @@ def main():
     sys.stderr.write("JOBS (%s): [%s] (%i) 100%%\n" % ('0'.rjust(len(str(jobs_total))),
                                                        bar_str,
                                                        jobs_total))
-    result_list = result_list.get()
+    #result_list = result_list.get()
     end_time = timer()
     sys.stderr.write('\nPROCESS-TIME: %.1f sec\n\n' % (end_time - start_time))
     #-------------------------------------------------------------------------
