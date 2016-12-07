@@ -24,7 +24,7 @@ This script will retrieve genomic data from refseq via rsync. It saves on downlo
 files that updated or are new will be downloaded in sub-sequent runs.
 
 ```bash
-usage: getRefseqGenomic.py [-h] [--version] [-b BRANCH] [-t TYPE] [-a]
+usage: getRefseqGenomic.py [-h] [--version] [-b BRANCH] [-l LEVEL] [-a]
                            [-p INT]
 
 Download fasta-genomic sequences from ncbi using rsync.
@@ -36,9 +36,11 @@ optional arguments:
                         Branches of organisms to download separated by comma,
                         e.g. bacteria, fungi, etc. [default="
                         bacteria,viral,fungi,protozoa,archaea"]
-  -t TYPE, --type TYPE  Type of genomic sequences to include, separated by
-                        comma. For example: Chromosome, Contig, Scaffold.
-                        [default="Complete Genome,Chromosome,Contig,Scaffold"]
+  -l LEVEL, --level LEVEL
+                        Assembly - level of genomic sequences to include,
+                        separated by comma. For example: Chromosome, Contig,
+                        Scaffold. [default="Complete
+                        Genome,Chromosome,Contig,Scaffold"]
   -a, --assembly        Print assembly stats for branches and exits.
 
 Threading:
@@ -55,7 +57,7 @@ Copyright Sebastian Schmeier (s.schmeier@gmail.com)
 The simplest call would be:
 
 ```bash
-# all default branches + all default "version_status" of assemblies.
+# all default branches + all default "assembly_level"s of assemblies.
 python getRefseqGenomic.py -p 8
 
 # for only one branch only
@@ -68,11 +70,11 @@ you necessarily want, e.g. for bacteria the download becomes huge. Instead one
 can use the following to only download "Complete Genome" for bacteria:
 
 ```bash
-python getRefseqGenomic.py -b bacteria -t "Complete Genome" -p 8
+python getRefseqGenomic.py -b bacteria -l "Complete Genome" -p 8
 ```
 
-You can check the stats on the assembly versions with `-a`. This will only
-download the assembly_summary.txt for the branch(es) and counts the different "version_status"
+You can check the stats on the assembly levels with `-a`. This will only
+download the assembly_summary.txt for the branch(es) and counts the different "assembly_level"s
 available.
 
 ```bash
@@ -96,7 +98,7 @@ GI identifiers) with `Kraken`. Requieres the third-party `BioPython` lib.
 
 
 ```bash
-usage: getKrakenFna.py [-h] [--version] [-b BRANCH] [-t TYPE] [-d DIRECTORY]
+usage: getKrakenFna.py [-h] [--version] [-b BRANCH] [-l LEVEL] [-d DIRECTORY]
                        [-a] [-p INT]
                        KrakenDB-DIR
 
@@ -116,14 +118,16 @@ optional arguments:
                         Branches of organisms to download separated by comma,
                         e.g. bacteria, fungi, etc. [default="
                         bacteria,viral,fungi,protozoa,archaea"]
-  -t TYPE, --type TYPE  Type of genomic sequences to include, separated by
-                        comma. For example: Chromosome, Contig, Scaffold.
-                        [default="Complete Genome,Chromosome,Contig,Scaffold"]
+  -l LEVEL, --level LEVEL
+                        Assembly - level of genomic sequences to include,
+                        separated by comma. For example: Chromosome, Contig,
+                        Scaffold. [default="Complete
+                        Genome,Chromosome,Contig,Scaffold"]
   -d DIRECTORY, --dir DIRECTORY
                         Base directory for refseq fasta-files. Here, we assume
                         sub-directories for branches, e.g. bacteria etc.
                         [default="./genomes/refseq/"]
-  -a, --assembly        Print assembly stats for branches and exit.
+  -a, --assembly        Print assembly stats for branches and exits.
 
 Threading:
   Multithreading arguments:
@@ -151,14 +155,14 @@ python getRefseqGenomic.py -b fungi -p 8
 python getRefseqGenomic.py -b archaea -p 8
 python getRefseqGenomic.py -b viral -p 8
 python getRefseqGenomic.py -b protozoa -p 8
-python getRefseqGenomic.py -b bacteria -t "Complete Genome" -p 8
+python getRefseqGenomic.py -b bacteria -l "Complete Genome" -p 8
 
 # convert to kraken format
 python getKrakenFna.py -b fungi -p 8 kraken_201612
 python getKrakenFna.py -b viral -p 8 kraken_201612
 python getKrakenFna.py -b archaea -p 8 kraken_201612
 python getKrakenFna.py -b protozoa -p 8 kraken_201612
-python getKrakenFna.py -b bacteria -p 8 -t "Complete Genome" kraken_201612
+python getKrakenFna.py -b bacteria -p 8 -l "Complete Genome" kraken_201612
 
 # install kraken if you must
 conda create -n kraken kraken-all

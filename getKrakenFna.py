@@ -72,13 +72,13 @@ def parse_cmdline():
         default="bacteria,viral,fungi,protozoa,archaea",
         help='Branches of organisms to download separated by comma, e.g. bacteria, fungi, etc. [default=" bacteria,viral,fungi,protozoa,archaea"]')
     
-    parser.add_argument('-t',
-        '--type',
-        dest='str_type',
-        metavar='TYPE',
+    parser.add_argument('-l',
+        '--level',
+        dest='str_level',
+        metavar='LEVEL',
         type=str,
         default="Complete Genome,Chromosome,Contig,Scaffold",
-        help='Type of genomic sequences to include, separated by comma. For example: Chromosome, Contig, Scaffold. [default="Complete Genome,Chromosome,Contig,Scaffold"]')
+        help='Assembly - level of genomic sequences to include, separated by comma. For example: Chromosome, Contig, Scaffold. [default="Complete Genome,Chromosome,Contig,Scaffold"]')
     parser.add_argument('-d',
         '--dir',
         dest='str_dir',
@@ -191,16 +191,20 @@ def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dirpath='./geno
         d = {}
         for a in oR:
             try:
-                version_status =  a[11]
+                assembly_level =  a[11]
             except:
                 continue
 
-            if version_status == 'assembly_level':
+            version_status =  a[10]
+            if version_status != 'latest':
+                continue
+        
+            if assembly_level == 'assembly_level':
                 continue
             
-            d[version_status] = d.get(version_status, 0) + 1
+            d[assembly_level] = d.get(assembly_level, 0) + 1
 
-            if version_status in genomictypes:
+            if assembly_level in genomictypes:
                 name     = os.path.basename(a[19]) + '_genomic.fna.gz'
                 filepath = os.path.join(basedir, name)
                 taxid    = a[5]
@@ -216,7 +220,7 @@ def main():
     args, parser = parse_cmdline()
 
     branches = [s.strip() for s in args.str_branch.split(',')]
-    types = [s.strip() for s in args.str_type.split(',')]
+    types = [s.strip() for s in args.str_level.split(',')]
     dirpath = args.str_dir
     process_number = args.process_number
     if process_number < 1:
