@@ -153,27 +153,33 @@ python getKrakenFna.py -b archaea -p 8 kraken_201612
 ## Putting it all together
 
 ```bash
-# Download refseq
-python getRefseqGenomic.py -b -p 8
+# clone repo
+git clone https://github.com/sschmeier/refseq2kraken.git kraken
+cd kraken
 
-# convert to kraken format
+# Download refseq => here only "Complete Genome"
+# assemblies, e.g. the default
+python getRefseqGenomic.py -p 8
+
+# convert to kraken format => again only "Complete Genome"
+# assemblies here, e.g. the default
 python getKrakenFna.py -p 8 kraken_201612
 
 # install kraken if you must
 conda create -n kraken kraken-all
 source activate kraken
 
-# build a new database 
+# build a new minikraken database 
 # download taxonomy
-kraken-build --download-taxonomy --db kraken-db-bvapf_201612
+kraken-build --download-taxonomy --db kraken-db-bva_201612
 
 # for each branch, add all fna in the directory to the database
-for dir in bacteria viral archaea protozoa fungi; do
+for dir in bacteria viral archaea ; do
         for fna in `ls kraken_201612/$dir/*.fna`; do
-                kraken-build --add-to-library $fna --db kraken-db-bvapf_201612;
+                kraken-build --add-to-library $fna --db kraken-db-bva_201612;
         done;
 done
 
 # build the actual database
-kraken-build --build --db kraken-db-bvapf_201612
+kraken-build --build --db kraken-db-bva_201612
 ```
