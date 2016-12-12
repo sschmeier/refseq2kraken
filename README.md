@@ -5,7 +5,7 @@ Similar approach as in:
 
 I borrowed freely, however, this is a `Python2` rewrite.
 
-I improved in two ways:
+Its improved in two ways:
 
 1. I split the tasks of  data download and kraken data preparation.
 2. Both separate tasks allow multithreading to be used.
@@ -175,11 +175,12 @@ kraken-build --download-taxonomy --db kraken-db-bva_201612
 
 # for each branch, add all fna in the directory to the database
 for dir in bacteria viral archaea ; do
-        for fna in `ls kraken_201612/$dir/*.fna`; do
-                kraken-build --add-to-library $fna --db kraken-db-bva_201612;
-        done;
+    find kraken_201612/$dir/ -name '*.fna' -print0 | xargs -0 -I{} -n1 -P8 kraken-build --add-to-library {} --db kraken-db-bva_201612;
 done
 
 # build the actual database
 kraken-build --build --db kraken-db-bva_201612
+
+# remove intermediate files
+kraken-build --clean --db kraken-db-bva_201612
 ```
