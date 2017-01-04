@@ -151,6 +151,7 @@ def main():
     
     iNum = 0
     iNotC = 0
+    iCorrect = 0
     for a in reader:
         iNum += 1
         if a[0] == 'C':
@@ -167,6 +168,9 @@ def main():
             if args.eval:
                 tax_test = int(a[1].split('|')[-1].strip())
 
+                if tax_test == tax:
+                    iCorrect += 1
+            
                 for key in list_keys:
                     if tax_test in dict_tax[key]:
                         name_test = '%s:%s'%(key,'|'.join(dict_tax[key][tax_test]))
@@ -177,7 +181,29 @@ def main():
         else:
             outfileobj.write('%s\t''\t''\n' % ('\t'.join(a)))        
             iNotC += 1
-           
+
+    if args.eval:
+        adj = len(str(iNum))
+        
+        pct_unc = round(iNotC*100.0/iNum, 1)
+        pct_unc = str(pct_unc).rjust(5)
+        
+        pct_c =   round(((iNum-iNotC)*100.0)/iNum, 1)
+        pct_c =   str(pct_c).rjust(5)
+
+        pct_cor = iCorrect*100.0/(iNum-iNotC)
+        pct_incor = 100. - pct_cor
+        pct_cor = str(round(pct_cor,1)).rjust(5)
+        pct_incor = str(round(pct_incor, 1)).rjust(5)
+         
+        sys.stderr.write('# %s (%s %%) / %i unclassified.\n' %(str(iNotC).rjust(adj), pct_unc, iNum))
+        sys.stderr.write('# %s (%s %%) / %i classified.\n' %(str(iNum-iNotC).rjust(adj), pct_c, iNum))
+        sys.stderr.write('## %s (%s %%) / %i correct [ as in assigned the exact same tax-id ].\n' %(str(iCorrect).rjust(adj), pct_cor, iNum-iNotC))
+        sys.stderr.write('## %s (%s %%) / %i incorrect\n' %(str(iNum-iNotC-iCorrect).rjust(adj), pct_incor, iNum-iNotC))
+        
+
+        
+        
     outfileobj.close()
     return
 
