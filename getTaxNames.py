@@ -149,8 +149,10 @@ def main():
                      'genbank_synonym',
                      'blast_name']
     
-
+    iNum = 0
+    iNotC = 0
     for a in reader:
+        iNum += 1
         if a[0] == 'C':
             name = ''
             name_test = ''
@@ -174,8 +176,7 @@ def main():
                 
         else:
             outfileobj.write('%s\t''\t''\n' % ('\t'.join(a)))        
-
-
+            iNotC += 1
            
     outfileobj.close()
     return
