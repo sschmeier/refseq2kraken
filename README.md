@@ -187,6 +187,10 @@ kraken-build --clean --db kraken-db-bva_201612
 # classify seqs
 kraken --db kraken-db-bva_201612 test_seqs/bva_test.fa > test_seqs/bva-results.txt
 
+# get report of all taxa found in sample
+kraken-report --show-zeros --db kraken-db-bva_201612 test_seqs/bva-results.txt | sort -n -k 5 | gzip > test_seqs/bva-results-report.txt.gz
+
+# ONLY for testing the 
 # attach taxonomy names of classification resutls + test seqs original tax names (use without --eval for non-test case)
-python getTaxNames.py kraken-db-bva_201612/taxonomy/names.dmp test_seqs/bva-results.txt --eval > test_seqs/bva-results-names.txt
+# python getTaxNames.py kraken-db-bva_201612/taxonomy/names.dmp test_seqs/bva-results.txt --eval > test_seqs/bva-results-names.txt
 ```
