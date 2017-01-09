@@ -17,6 +17,7 @@ Its improved in two ways:
 3. Linux shell with rsync and Git
 4. ~10GB of space for compressed ncbi refseq fasta-files
 5. ~40GB of space for processed uncompressed kraken-readable fasta-files
+6. ~130GB if a complete Kraken database is build without restricting its size (e.g. with --max-db-size 20)
 
 ## Download refseq genomic fasta-data via rsync (getRefseqGenomic.py)
 
@@ -178,8 +179,8 @@ for dir in bacteria viral archaea ; do
     find kraken_201612/$dir/ -name '*.fna' -print0 | xargs -0 -I{} -n1 -P8 kraken-build --add-to-library {} --db kraken-db-bva_201612;
 done
 
-# build the actual database
-kraken-build --build --db kraken-db-bva_201612
+# build the actual database restrict its size here to 20GB
+kraken-build --build --db kraken-db-bva_201612 --max-db-size 20
 
 # remove intermediate files
 kraken-build --clean --db kraken-db-bva_201612
