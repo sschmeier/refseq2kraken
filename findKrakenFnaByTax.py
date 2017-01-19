@@ -111,13 +111,15 @@ def parse_assemblyfile(taxa, fname):
             if taxid not in taxa:
                 continue
 
-            version_status =  a[10]
-            basename     = os.path.basename(a[19]) + '_genomic.tax.fna'
-            assembly_level =  a[11]
+            name = a[7]
+            version_status = a[10]
+            basename = os.path.basename(a[19]) + '_genomic.tax.fna'
+            assembly_level = a[11]
             if taxid not in jobs:
                 jobs[taxid] = set()
                 
-            jobs[taxid].add((basename,
+            jobs[taxid].add((name,
+                            basename,
                             assembly_level,
                             version_status))
         
@@ -143,14 +145,15 @@ def main():
        
     for taxid in taxa:
         if taxid not in jobs_br:
-            sys.stdout.write('%s\tn/a\tn/a\tn/a\n' %( taxid ))
+            sys.stdout.write('%s\tn/a\tn/a\tn/a\tn/a\n' %( taxid ))
         else:
             for t in jobs_br[taxid]:
-                asem_stat = t[1]
-                v_stat = t[2]
-                filepath = t[0]
+                asem_stat = t[2]
+                v_stat = t[3]
+                filepath = t[1]
+                name= t[0]
                    
-                sys.stdout.write('%s\t%s\t%s\t%s\n' %( taxid, asem_stat, v_stat, filepath ))
+                sys.stdout.write('%s\t%s\t%s\t%s\t%s\n' %( taxid, name, asem_stat, v_stat, filepath ))
                 
     return
 

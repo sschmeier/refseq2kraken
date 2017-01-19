@@ -15,6 +15,7 @@ USAGE
 VERSION HISTORY
 ===============
 
+0.0.2   2017/01/20    Allowed for gziped output files
 0.0.1   2016/12/06    Initial version.
 
 LICENCE
@@ -39,8 +40,8 @@ import hashlib
 import time
 
 
-__version__ = '0.0.1'
-__date__ = '2016/12/06'
+__version__ = '0.0.2'
+__date__ = '2017/01/20'
 __email__ = 's.schmeier@gmail.com'
 __author__ = 'Sebastian Schmeier'
 
@@ -86,6 +87,13 @@ def parse_cmdline():
         type=str,
         default="./genomes/refseq/",
         help='Base directory for refseq fasta-files. Here, we assume sub-directories for branches, e.g. bacteria etc. [default="./genomes/refseq/"]')
+
+    parser.add_argument('-z',
+        '--gzip',
+        dest='gzip',
+        default=False,
+        action='store_true',
+        help='Create gzip-ed output files. (process takes a lot longer)')
 
     parser.add_argument('-a',
         '--assembly',
@@ -175,7 +183,7 @@ def my_func(args):
     return (args, 1)
 
 
-def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dirpath='./genomes/refseq/', krakendir='./kraken'):
+def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dirpath='./genomes/refseq/', krakendir='./kraken', gzip=False):
     basedir = os.path.join(dirpath, branch)
     fname = 'assembly_summary.txt'
     krakendir = os.path.join(krakendir, branch)
@@ -209,8 +217,11 @@ def parse_assemblyfile(branch, genomictypes=["Complete Genome"], dirpath='./geno
                 filepath = os.path.join(basedir, name)
                 taxid    = a[5]
 
-                fnameTax = name.replace('.fna.gz', '.tax.fna')
-                #fnameTax = name.replace('.fna.gz', '.tax.fna.gz')  # store gziped files
+                if gzip:
+                    fnameTax = name.replace('.fna.gz', '.tax.fna.gz')  # store gziped files
+                else:
+                    fnameTax = name.replace('.fna.gz', '.tax.fna')
+
                 jobs.append((taxid, filepath, os.path.join(krakendir, fnameTax)))
         
     return jobs, d
@@ -229,7 +240,11 @@ def main():
 
     job_list = []
     for branch in branches:
-        job_list_br, dStats = parse_assemblyfile(branch, types, dirpath, args.str_kraken)
+        job_list_br, dStats = parse_assemblyfile(branch,
+                                                 types,
+                                                 dirpath,
+                                                 args.str_kraken,
+                                                 args.gzip)
         job_list += job_list_br
         if args.assemblystats:
             status = dStats.keys()
